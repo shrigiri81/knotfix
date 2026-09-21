@@ -291,7 +291,7 @@ export default function DashboardPage() {
           title={isServerError ? 'Backend Server Unreachable' : 'Failed to Load Workspace'}
           message={
             isServerError
-              ? 'Unable to connect to Pulse API server. The Spring Boot backend might be offline or starting up.'
+              ? 'Unable to connect to KnotFix API server. The Spring Boot backend might be offline or starting up.'
               : (error || 'Could not load workspace overview data.')
           }
           error={issuesError}

@@ -4,7 +4,7 @@ import Sidebar from './Sidebar'
 import Header from './Header'
 
 function readCollapsed() {
-  try { return localStorage.getItem('pulse_sidebar_collapsed') === 'true' } catch { return false }
+  try { return localStorage.getItem('knotfix_sidebar_collapsed') === 'true' } catch { return false }
 }
 
 export default function Layout({ children }) {
@@ -23,54 +23,50 @@ export default function Layout({ children }) {
 
   useEffect(() => () => clearAllTimers(), [])
 
-  // ── Collapse flow: sidebar rolls up into topbar → swamps into the pill ──
+  // ── Collapse flow: sidebar slides left, width closes, header shows pill ──
   const handleCollapse = useCallback(() => {
     clearAllTimers()
-    try { localStorage.setItem('pulse_sidebar_collapsed', 'true') } catch {}
+    try { localStorage.setItem('knotfix_sidebar_collapsed', 'true') } catch {}
     setIsCollapsed(true)
     setIsAnimating(true)
 
-    // Phase 1 (0ms): Sidebar begins rolling up towards topbar
+    // Phase 1 (0ms): Sidebar slides left
     setAnimClass('sidebar-roll-up')
 
-    // Phase 2 (90ms): Outer column begins closing width smoothly
+    // Phase 2 (60ms): Width starts closing
     timers.current.push(setTimeout(() => {
       setWidthOpen(false)
-    }, 90))
+    }, 60))
 
-    // Phase 3 (270ms): Sidebar reaches the topbar → header switches to pill ("swamps into the pill")
+    // Phase 3 (220ms): Header switches to pill mode
     timers.current.push(setTimeout(() => {
       setHeaderCollapsed(true)
-    }, 270))
+    }, 220))
 
-    // Phase 4 (440ms): Animation settled
+    // Phase 4 (360ms): Animation settled
     timers.current.push(setTimeout(() => {
       setAnimClass('')
       setIsAnimating(false)
-    }, 440))
+    }, 360))
   }, [])
 
-  // ── Expand flow: pill drops out → sidebar unrolls downward into place ──
+  // ── Expand flow: header reverts, sidebar slides in from left ──
   const handleExpand = useCallback(() => {
     clearAllTimers()
-    try { localStorage.setItem('pulse_sidebar_collapsed', 'false') } catch {}
+    try { localStorage.setItem('knotfix_sidebar_collapsed', 'false') } catch {}
     setIsCollapsed(false)
     setIsAnimating(true)
 
-    // Phase 1 (0ms): Column width opens and sidebar begins unrolling downward
+    // Phase 1 (0ms): Width opens and header reverts immediately
     setWidthOpen(true)
+    setHeaderCollapsed(false)
     setAnimClass('sidebar-drop-in')
 
-    // Phase 2 (70ms): Header transitions from pill to logo as sidebar unrolls down
-    timers.current.push(setTimeout(() => {
-      setHeaderCollapsed(false)
-    }, 70))
-
-    // Phase 3 (450ms): Settled
+    // Phase 2 (400ms): Settled
     timers.current.push(setTimeout(() => {
       setAnimClass('')
       setIsAnimating(false)
-    }, 450))
+    }, 400))
   }, [])
 
   const toggle = useCallback(() => {
@@ -93,8 +89,8 @@ export default function Layout({ children }) {
     marginRight: widthOpen ? '0.875rem' : 0,
     position: 'relative',
     zIndex: isAnimating ? 30 : 1,
-    overflow: isAnimating ? 'visible' : (widthOpen ? 'visible' : 'hidden'),
-    transition: 'width 420ms cubic-bezier(0.22, 1, 0.36, 1), margin-right 420ms cubic-bezier(0.22, 1, 0.36, 1)',
+    overflow: 'hidden',
+    transition: 'width 320ms cubic-bezier(0.4, 0, 0.2, 1), margin-right 320ms cubic-bezier(0.4, 0, 0.2, 1)',
     pointerEvents: !widthOpen && !isAnimating ? 'none' : 'auto',
     opacity: !widthOpen && !isAnimating ? 0 : 1,
   }
@@ -107,10 +103,10 @@ export default function Layout({ children }) {
       {/* Full-width floating header */}
       <Header collapsed={headerCollapsed} onToggle={toggle} />
 
-      {/* Split body: visible overflow during roll-up so top strip can cross into header */}
+      {/* Split body */}
       <div
         className="flex-1 min-h-0 flex relative"
-        style={{ overflow: isAnimating ? 'visible' : 'hidden' }}
+        style={{ overflow: 'hidden' }}
       >
         {/* Sidebar outer clip (width-animating) */}
         <div style={outerStyle}>

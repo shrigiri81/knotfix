@@ -18,7 +18,7 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('Pulse Application Error Boundary caught:', error, errorInfo)
+    console.error('KnotFix Application Error Boundary caught:', error, errorInfo)
     this.setState({ errorInfo })
   }
 

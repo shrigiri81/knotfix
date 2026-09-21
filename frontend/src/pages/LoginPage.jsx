@@ -37,9 +37,9 @@ export default function LoginPage() {
       <div className="relative z-10 w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#4450b7] text-white font-bold text-lg font-[Geist,sans-serif] mb-3">P</div>
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#4450b7] text-white font-bold text-lg font-[Geist,sans-serif] mb-3">K</div>
           <h1 className="text-[28px] font-semibold text-[#0b1c30] tracking-tight font-[Geist,sans-serif]">Welcome back</h1>
-          <p className="text-[14px] text-[#565e74] mt-1 font-[Inter,sans-serif]">Sign in to your Pulse workspace</p>
+          <p className="text-[14px] text-[#565e74] mt-1 font-[Inter,sans-serif]">Sign in to your KnotFix workspace</p>
         </div>
 
         {/* Card */}

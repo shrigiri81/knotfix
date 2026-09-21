@@ -284,7 +284,7 @@ export default function ProjectDetailPage() {
             isNotFound
               ? `Project #${id} could not be found. It may have been deleted, or you might not have permission to view it.`
               : isServerDown
-              ? 'Cannot connect to the Pulse backend server. The Spring Boot application might be offline or starting up.'
+              ? 'Cannot connect to the KnotFix backend server. The Spring Boot application might be offline or starting up.'
               : (error || 'An unexpected error occurred while loading this project.')
           }
           error={projError}

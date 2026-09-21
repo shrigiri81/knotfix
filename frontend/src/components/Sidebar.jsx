@@ -32,11 +32,11 @@ function dotColor(projId) {
 // ─── Pinned-projects localStorage hook ─────────────────────────────────────────
 function usePinnedProjects() {
   const [pinnedIds, setPinnedIds] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('pulse_pinned_projects')) ?? [] } catch { return [] }
+    try { return JSON.parse(localStorage.getItem('knotfix_pinned_projects')) ?? [] } catch { return [] }
   })
 
   const persist = (ids) => {
-    try { localStorage.setItem('pulse_pinned_projects', JSON.stringify(ids)) } catch {}
+    try { localStorage.setItem('knotfix_pinned_projects', JSON.stringify(ids)) } catch {}
   }
 
   const pin = useCallback((id) => {
@@ -176,11 +176,11 @@ export default function Sidebar({ onCollapse }) {
 
           {/* My Issues */}
           <NavLink
-            to="/dashboard"
+            to="/my-issues"
             end
             className={({ isActive }) =>
               `flex items-center justify-between px-3 py-2 rounded-xl font-medium text-xs transition-colors ${
-                isActive && !isDashboard
+                isActive
                   ? 'bg-indigo-50/80 text-indigo-700 shadow-sm border border-indigo-100/70'
                   : 'text-[#454652] hover:text-[#0b1c30] hover:bg-slate-50'
               }`

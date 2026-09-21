@@ -63,7 +63,7 @@ export default function NotFoundPage() {
               className="h-9 px-4 bg-[#4450b7] hover:bg-[#3540a0] text-white text-[13px] font-semibold rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all active:scale-[0.98] font-[Geist,sans-serif]"
             >
               <LogIn className="w-4 h-4" />
-              Sign in to Pulse
+              Sign in to KnotFix
             </Link>
           )}
 

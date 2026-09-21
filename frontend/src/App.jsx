@@ -13,6 +13,7 @@ import ProjectsPage from './pages/ProjectsPage'
 import IssueDetailPage from './pages/IssueDetailPage'
 import ProfilePage from './pages/ProfilePage'
 import NotFoundPage from './pages/NotFoundPage'
+import MyIssuesPage from './pages/MyIssuesPage'
 
 function PrivateRoute({ children }) {
   const { user } = useAuth()
@@ -47,6 +48,7 @@ function AppRoutes() {
         <Route path="/projects/:id" element={<ProjectDetailPage />} />
         <Route path="/issues/:id" element={<IssueDetailPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/my-issues" element={<MyIssuesPage />} />
       </Route>
 
       {/* 404 Not Found fallback */}

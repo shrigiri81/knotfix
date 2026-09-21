@@ -304,7 +304,7 @@ export default function IssueDetailPage() {
             isNotFound
               ? `Issue #${id} does not exist, has been deleted, or you don't have permission to view it.`
               : isServerDown
-              ? 'Cannot connect to the Pulse backend server. The Spring Boot application might be offline or restarting.'
+              ? 'Cannot connect to the KnotFix backend server. The Spring Boot application might be offline or restarting.'
               : (error || 'An unexpected error occurred while loading this issue.')
           }
           error={issueError}

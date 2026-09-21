@@ -42,9 +42,9 @@ export default function RegisterPage() {
 
       <div className="relative z-10 w-full max-w-sm">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#4450b7] text-white font-bold text-lg font-[Geist,sans-serif] mb-3">P</div>
+          <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#4450b7] text-white font-bold text-lg font-[Geist,sans-serif] mb-3">K</div>
           <h1 className="text-[28px] font-semibold text-[#0b1c30] tracking-tight font-[Geist,sans-serif]">Create account</h1>
-          <p className="text-[14px] text-[#565e74] mt-1 font-[Inter,sans-serif]">Join your team on Pulse</p>
+          <p className="text-[14px] text-[#565e74] mt-1 font-[Inter,sans-serif]">Join your team on KnotFix</p>
         </div>
 
         <div className="bg-white rounded-xl border border-[#e5eeff] p-6" style={{ boxShadow: '0 4px 24px rgba(11,28,48,0.06), 0 0 0 1px rgba(226,232,240,0.8)' }}>

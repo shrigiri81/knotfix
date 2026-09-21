@@ -82,10 +82,10 @@ export default function Header({ collapsed, onToggle }) {
       <div className="flex items-center gap-2 shrink-0">
         {/* Persistent Brand Logo: identical size (w-9 h-9 rounded-xl) in both expanded & collapsed */}
         <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-base shadow-sm shadow-indigo-200 shrink-0 z-10">
-          P
+          K
         </div>
 
-        {/* Content next to logo: toggles between "Pulse" brand text and the extending pill */}
+        {/* Content next to logo: toggles between "KnotFix" brand text and the extending pill */}
         <div key={String(collapsed)} className="flex items-center">
         {collapsed ? (
           /* ── Collapsed: Pill extending directly out of the logo with generous breathing room ── */
@@ -132,7 +132,7 @@ export default function Header({ collapsed, onToggle }) {
 
               {/* My Issues */}
               <button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/my-issues')}
                 className="p-1.5 rounded-lg text-[#767684] hover:text-[#0b1c30] hover:bg-slate-200/60 flex items-center justify-center transition-colors relative"
                 title="My Issues"
                 aria-label="My Issues"
@@ -162,9 +162,9 @@ export default function Header({ collapsed, onToggle }) {
             </button>
           </div>
         ) : (
-          /* ── Expanded: Pulse branding text ── */
+          /* ── Expanded: KnotFix branding text ── */
           <span className={`${isFirstRender.current ? '' : 'logo-emerge'} font-semibold text-lg tracking-tight text-[#0b1c30] font-[Geist,sans-serif] ml-1`}>
-            Pulse
+            KnotFix
           </span>
         )}
         </div>
@@ -173,7 +173,7 @@ export default function Header({ collapsed, onToggle }) {
         <div className="hidden sm:flex items-center text-xs font-medium text-[#767684] gap-1.5 pl-3 border-l border-slate-200">
           <span className="text-[#565e74] hover:text-[#0b1c30] cursor-default">Workspace</span>
           <ChevronRight className="w-3 h-3 text-[#767684]" />
-          <span className="text-[#0b1c30] font-semibold">Pulse</span>
+          <span className="text-[#0b1c30] font-semibold">KnotFix</span>
         </div>
       </div>
 

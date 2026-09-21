@@ -19,6 +19,19 @@ export default function AlertModal({
     return () => window.removeEventListener('keydown', handler)
   }, [open, onClose])
 
+  // Block interaction with background content when modal is open
+  useEffect(() => {
+    if (!open) return
+    const root = document.getElementById('root')
+    if (!root) return
+    root.setAttribute('inert', '')
+    root.setAttribute('aria-hidden', 'true')
+    return () => {
+      root.removeAttribute('inert')
+      root.removeAttribute('aria-hidden')
+    }
+  }, [open])
+
   if (!open) return null
 
   const isError = type === 'error'

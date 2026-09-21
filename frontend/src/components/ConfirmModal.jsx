@@ -28,6 +28,19 @@ export default function ConfirmModal({
     return () => window.removeEventListener('keydown', handler)
   }, [isModalOpen, handleClose, loading])
 
+  // Block interaction with background content when modal is open
+  useEffect(() => {
+    if (!isModalOpen) return
+    const root = document.getElementById('root')
+    if (!root) return
+    root.setAttribute('inert', '')
+    root.setAttribute('aria-hidden', 'true')
+    return () => {
+      root.removeAttribute('inert')
+      root.removeAttribute('aria-hidden')
+    }
+  }, [isModalOpen])
+
   if (!isModalOpen) return null
 
   const isDanger = propIsDanger !== undefined ? propIsDanger : variant === 'danger'

@@ -175,7 +175,7 @@ export default function ProjectsPage() {
           }
           message={
             isServerError
-              ? 'Unable to connect to the Pulse API server. The Spring Boot backend might be offline or starting up.'
+              ? 'Unable to connect to the KnotFix API server. The Spring Boot backend might be offline or starting up.'
               : isAuthError
               ? 'Your session might have expired. Please sign in to view projects.'
               : (error || 'An unexpected error occurred while loading projects.')
