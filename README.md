@@ -64,20 +64,40 @@ src/main/resources/application.properties
 
 ```bash
 cd frontend
-npm install
-npm run dev
+bun install
+bun dev
 ```
 
 ## Screenshots
 
+<p align="center"><strong>Dashboard</strong></p>
+<p align="center">Personal workspace overview — assigned issues, workload stats, and recent activity at a glance.</p>
 <p align="center">
-  <img src="./Screenshots/Screenshot%202026-09-21%20at%2015-23-03%20KnotFix%20%E2%80%94%20Issue%20Tracker.png" width="48%">
-  <img src="./Screenshots/Screenshot%202026-09-21%20at%2015-24-10%20KnotFix%20%E2%80%94%20Issue%20Tracker.png" width="48%">
+  <img src="./Screenshots/Screenshot%202026-09-21%20at%2015-23-03%20KnotFix%20%E2%80%94%20Issue%20Tracker.png" width="90%">
 </p>
 
+<br>
+
+<p align="center"><strong>Projects</strong></p>
+<p align="center">Browse and manage all workspace projects, with progress bars and member info on each card.</p>
 <p align="center">
-  <img src="./Screenshots/Screenshot%202026-09-21%20at%2015-24-31%20KnotFix%20%E2%80%94%20Issue%20Tracker.png" width="48%">
-  <img src="./Screenshots/Screenshot%202026-09-21%20at%2015-24-43%20KnotFix%20%E2%80%94%20Issue%20Tracker.png" width="48%">
+  <img src="./Screenshots/Screenshot%202026-09-21%20at%2015-24-10%20KnotFix%20%E2%80%94%20Issue%20Tracker.png" width="90%">
+</p>
+
+<br>
+
+<p align="center"><strong>Project Detail</strong></p>
+<p align="center">Full issue list for a project — filterable by status and priority, with completion tracking in the sidebar.</p>
+<p align="center">
+  <img src="./Screenshots/Screenshot%202026-09-21%20at%2015-24-31%20KnotFix%20%E2%80%94%20Issue%20Tracker.png" width="90%">
+</p>
+
+<br>
+
+<p align="center"><strong>Issue Detail</strong></p>
+<p align="center">Issue thread with threaded comments, replies, and metadata like assignee, priority, and project link.</p>
+<p align="center">
+  <img src="./Screenshots/Screenshot%202026-09-21%20at%2015-24-43%20KnotFix%20%E2%80%94%20Issue%20Tracker.png" width="90%">
 </p>
 
 ## Status

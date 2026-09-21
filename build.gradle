@@ -6,7 +6,7 @@ plugins {
 
 group = 'foo.shrigiri'
 version = '4.1.0'
-description = 'Issue Tracker'
+description = 'KnotFix'
 
 java {
     toolchain {
