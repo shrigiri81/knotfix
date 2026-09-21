@@ -2,8 +2,6 @@ import { useState, useEffect, useMemo, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   FolderKanban,
-  Plus,
-  AlertTriangle,
   Zap,
   UserCheck,
   Clock,
@@ -20,6 +18,7 @@ import StatusBadge from '../components/StatusBadge'
 import PriorityBadge from '../components/PriorityBadge'
 import Avatar from '../components/Avatar'
 import AlertModal from '../components/AlertModal'
+import ErrorState from '../components/ErrorState'
 import { stripContentWrapper } from '../utils/text'
 import {
   apiCreateIssue,
@@ -63,6 +62,14 @@ export default function DashboardPage() {
 
   const loading = issuesLoading || projectsLoading
   const error = issuesError?.response?.data || issuesError?.message || ''
+  const isServerError = Boolean(
+    issuesError && (
+      !issuesError.response ||
+      issuesError.response.status >= 500 ||
+      issuesError.code === 'ERR_NETWORK' ||
+      issuesError.code === 'ECONNABORTED'
+    )
+  )
 
   // View tabs: 'assigned' | 'created' | 'recent'
   const [activeTab, setActiveTab] = useState('assigned')
@@ -276,24 +283,27 @@ export default function DashboardPage() {
     }
   }
 
+  if (!loading && issuesError && allIssues.length === 0) {
+    return (
+      <div className="p-6 max-w-4xl mx-auto min-h-[70vh] flex items-center justify-center">
+        <ErrorState
+          variant={isServerError ? 'server-down' : 'error'}
+          title={isServerError ? 'Backend Server Unreachable' : 'Failed to Load Workspace'}
+          message={
+            isServerError
+              ? 'Unable to connect to Pulse API server. The Spring Boot backend might be offline or starting up.'
+              : (error || 'Could not load workspace overview data.')
+          }
+          error={issuesError}
+          onRetry={loadData}
+        />
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="p-6 max-w-[1400px] mx-auto">
-        {error && (
-          <div className="mb-6 bg-[#eff4ff] border border-[#dce9ff] rounded-2xl p-4 flex items-center justify-between shadow-xs">
-            <div className="flex items-center gap-2.5">
-              <AlertTriangle className="w-5 h-5 text-[#4450b7]" />
-              <p className="text-[13px] font-medium text-[#0b1c30] font-[Inter,sans-serif]">{error}</p>
-            </div>
-            <button
-              onClick={loadData}
-              className="text-[12px] font-semibold text-[#4450b7] hover:underline font-[Geist,sans-serif]"
-            >
-              Retry
-            </button>
-          </div>
-        )}
-
         {/* Dashboard Overview Header (Item 10) */}
         <section className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
           <div>

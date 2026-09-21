@@ -70,7 +70,7 @@ public class IssuesService {
         }
     }
 
-    public Issues updateIssue(Issues issue) {
+    public Issues updateIssue(Issues issue, String username) {
         log.info("Updating issue with id: {}", issue.getIssueId());
         Projects project1 = issue.getProject();
         if (project1 != null && project1.getProjId() != null) {

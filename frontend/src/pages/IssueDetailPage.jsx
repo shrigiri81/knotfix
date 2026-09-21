@@ -9,12 +9,14 @@ import {
   FolderKanban,
   Send,
   AlertCircle,
+  Home,
 } from 'lucide-react'
 import StatusBadge from '../components/StatusBadge'
 import PriorityBadge from '../components/PriorityBadge'
 import Avatar from '../components/Avatar'
 import ConfirmModal from '../components/ConfirmModal'
 import AlertModal from '../components/AlertModal'
+import ErrorState from '../components/ErrorState'
 import { stripContentWrapper } from '../utils/text'
 import {
   apiUpdateIssue,
@@ -278,6 +280,67 @@ export default function IssueDetailPage() {
           <div className="w-8 h-8 rounded-full border-2 border-[#4450b7] border-t-transparent animate-spin" />
           <p className="text-[13px] text-[#565e74] font-[Inter,sans-serif]">Loading issue details...</p>
         </div>
+      </div>
+    )
+  }
+
+  if (!loading && (!issue || issueError)) {
+    const isServerDown = Boolean(
+      issueError && (
+        !issueError.response ||
+        issueError.response.status >= 500 ||
+        issueError.code === 'ERR_NETWORK' ||
+        issueError.code === 'ECONNABORTED'
+      )
+    )
+    const isNotFound = issueError?.response?.status === 404 || (!issue && !issueError && !isServerDown)
+
+    return (
+      <div className="p-6 max-w-4xl mx-auto min-h-[60vh] flex items-center justify-center">
+        <ErrorState
+          variant={isNotFound ? 'not-found' : isServerDown ? 'server-down' : 'error'}
+          title={isNotFound ? 'Issue Not Found' : isServerDown ? 'Server Unreachable' : 'Failed to Load Issue'}
+          message={
+            isNotFound
+              ? `Issue #${id} does not exist, has been deleted, or you don't have permission to view it.`
+              : isServerDown
+              ? 'Cannot connect to the Pulse backend server. The Spring Boot application might be offline or restarting.'
+              : (error || 'An unexpected error occurred while loading this issue.')
+          }
+          error={issueError}
+          onRetry={() => {
+            refetchIssue()
+            refetchComments()
+          }}
+          action={
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="h-9 px-3.5 bg-[#eff4ff] hover:bg-[#e5eeff] text-[#0b1c30] text-[13px] font-medium rounded-xl flex items-center justify-center gap-1.5 border border-[#c6c5d5]/60 transition-all font-[Geist,sans-serif]"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Go Back
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/projects')}
+                className="h-9 px-3.5 bg-white hover:bg-slate-50 text-[#565e74] hover:text-[#0b1c30] text-[13px] font-medium rounded-xl flex items-center justify-center gap-1.5 border border-[#c6c5d5]/60 transition-all font-[Geist,sans-serif]"
+              >
+                <FolderKanban className="w-4 h-4" />
+                All Projects
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/dashboard')}
+                className="h-9 px-3.5 bg-white hover:bg-slate-50 text-[#565e74] hover:text-[#0b1c30] text-[13px] font-medium rounded-xl flex items-center justify-center gap-1.5 border border-[#c6c5d5]/60 transition-all font-[Geist,sans-serif]"
+              >
+                <Home className="w-4 h-4" />
+                Dashboard
+              </button>
+            </div>
+          }
+        />
       </div>
     )
   }

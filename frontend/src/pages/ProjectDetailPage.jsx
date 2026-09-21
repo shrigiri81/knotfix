@@ -19,6 +19,7 @@ import PriorityBadge from '../components/PriorityBadge'
 import Avatar from '../components/Avatar'
 import AlertModal from '../components/AlertModal'
 import ConfirmModal from '../components/ConfirmModal'
+import ErrorState from '../components/ErrorState'
 import { stripContentWrapper } from '../utils/text'
 import {
   apiUpdateProject,
@@ -100,12 +101,6 @@ export default function ProjectDetailPage() {
     }
   }, [project])
 
-  // Handle 404
-  useEffect(() => {
-    if (projError?.response?.status === 404) {
-      navigate('/projects')
-    }
-  }, [projError, navigate])
 
   const load = () => {
     refetchProject()
@@ -136,11 +131,8 @@ export default function ProjectDetailPage() {
         issueDesc: stripContentWrapper(newIssue.issueDesc.trim()),
         status: newIssue.status,
         priority: newIssue.priority,
-        project: {
-          projId: parseInt(id),
-          projTitle: project?.projTitle,
-          projectMembers: members.map((m) => ({ userId: m.userId, username: m.username, enabled: true })),
-        },
+        project: { projId: parseInt(id) },
+        createdBy: { userId: user?.userId, enabled: true },
         assignedTo: { userId: assignedUserId, enabled: true },
       }
       const res = await apiCreateIssue(payload)
@@ -268,6 +260,49 @@ export default function ProjectDetailPage() {
           <div className="w-8 h-8 rounded-full border-2 border-[#4450b7] border-t-transparent animate-spin" />
           <p className="text-[13px] text-[#565e74] font-[Inter,sans-serif]">Loading project details...</p>
         </div>
+      </div>
+    )
+  }
+
+  if (!loading && (!project || projError)) {
+    const isServerDown = Boolean(
+      projError && (
+        !projError.response ||
+        projError.response.status >= 500 ||
+        projError.code === 'ERR_NETWORK' ||
+        projError.code === 'ECONNABORTED'
+      )
+    )
+    const isNotFound = projError?.response?.status === 404 || (!project && !projError && !isServerDown)
+
+    return (
+      <div className="p-6 max-w-4xl mx-auto min-h-[60vh] flex items-center justify-center">
+        <ErrorState
+          variant={isNotFound ? 'not-found' : isServerDown ? 'server-down' : 'error'}
+          title={isNotFound ? 'Project Not Found' : isServerDown ? 'Server Unreachable' : 'Failed to Load Project'}
+          message={
+            isNotFound
+              ? `Project #${id} could not be found. It may have been deleted, or you might not have permission to view it.`
+              : isServerDown
+              ? 'Cannot connect to the Pulse backend server. The Spring Boot application might be offline or starting up.'
+              : (error || 'An unexpected error occurred while loading this project.')
+          }
+          error={projError}
+          onRetry={() => {
+            refetchProject()
+            refetchIssues()
+          }}
+          action={
+            <button
+              type="button"
+              onClick={() => navigate('/projects')}
+              className="h-9 px-4 bg-[#eff4ff] hover:bg-[#e5eeff] text-[#0b1c30] text-[13px] font-medium rounded-xl flex items-center justify-center gap-1.5 border border-[#c6c5d5]/60 transition-all font-[Geist,sans-serif]"
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              Back to Projects
+            </button>
+          }
+        />
       </div>
     )
   }

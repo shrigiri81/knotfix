@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FolderKanban, Plus, Search, Trash2, ArrowRight, Lock, LogIn } from 'lucide-react'
+import { FolderKanban, Plus, Search, Trash2, ArrowRight, LogIn } from 'lucide-react'
 import Modal from '../components/Modal'
 import ConfirmModal from '../components/ConfirmModal'
 import AlertModal from '../components/AlertModal'
+import ErrorState from '../components/ErrorState'
 import Avatar from '../components/Avatar'
 import { stripContentWrapper } from '../utils/text'
 import { apiCreateProject, apiDeleteProject, apiSearch } from '../api/client'
@@ -50,6 +51,15 @@ export default function ProjectsPage() {
 
   const loading = projectsLoading || issuesLoading
   const error = projError?.response?.data || projError?.message || ''
+  const isAuthError = Boolean(projError?.response && (projError.response.status === 401 || projError.response.status === 403))
+  const isServerError = Boolean(
+    projError && (
+      !projError.response ||
+      projError.response.status >= 500 ||
+      projError.code === 'ERR_NETWORK' ||
+      projError.code === 'ECONNABORTED'
+    )
+  )
 
   const showAlert = (rawMessage, title = 'Notice', type = 'error') => {
     let message = rawMessage
@@ -151,25 +161,47 @@ export default function ProjectsPage() {
     p.projDesc?.toLowerCase().includes(filter.toLowerCase())
   )
 
+  if (!loading && projError && projects.length === 0) {
+    return (
+      <div className="p-6 max-w-4xl mx-auto min-h-[70vh] flex items-center justify-center">
+        <ErrorState
+          variant={isServerError ? 'server-down' : isAuthError ? 'unauthorized' : 'error'}
+          title={
+            isServerError
+              ? 'Backend Server Unreachable'
+              : isAuthError
+              ? 'Access Restricted'
+              : 'Failed to Load Projects'
+          }
+          message={
+            isServerError
+              ? 'Unable to connect to the Pulse API server. The Spring Boot backend might be offline or starting up.'
+              : isAuthError
+              ? 'Your session might have expired. Please sign in to view projects.'
+              : (error || 'An unexpected error occurred while loading projects.')
+          }
+          error={projError}
+          onRetry={load}
+          action={
+            isAuthError ? (
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
+                className="h-9 px-4 bg-[#4450b7] hover:bg-[#3540a0] text-white text-[13px] font-semibold rounded-xl flex items-center justify-center gap-1.5 shadow-sm transition-all font-[Geist,sans-serif]"
+              >
+                <LogIn className="w-4 h-4" />
+                Sign In
+              </button>
+            ) : null
+          }
+        />
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="p-6 max-w-[1600px] mx-auto">
-        {error && (
-          <div className="mb-6 bg-[#eff4ff] border border-[#dce9ff] rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-            <div className="flex items-center gap-3">
-              <Lock className="w-5 h-5 text-[#4450b7]" />
-              <p className="text-[13px] font-semibold text-[#0b1c30] font-[Geist,sans-serif]">{error}</p>
-            </div>
-            <button
-              onClick={() => navigate('/login')}
-              className="shrink-0 px-4 py-2 bg-[#4450b7] hover:bg-[#3540a0] text-white text-[12px] font-semibold rounded-lg transition-colors font-[Geist,sans-serif] shadow-xs flex items-center gap-1.5 self-start sm:self-auto"
-            >
-              <LogIn className="w-4 h-4" />
-              Sign in
-            </button>
-          </div>
-        )}
-
         {/* Page Header */}
         <section className="flex flex-col gap-4 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

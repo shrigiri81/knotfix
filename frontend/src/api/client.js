@@ -38,10 +38,30 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// Handle 401 by clearing token, React Query cache, and redirecting to login
+// Handle server connectivity status and 401 auth expiration
 api.interceptors.response.use(
-  (res) => res,
+  (res) => {
+    // Dispatch server-online event on successful response
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('pulse:server-online'))
+    }
+    return res
+  },
   (err) => {
+    // Check for server down / network failure / 502/503/504 gateway errors
+    if (!err.response || err.code === 'ERR_NETWORK' || err.code === 'ECONNABORTED' || (err.response?.status >= 502 && err.response?.status <= 504)) {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('pulse:server-offline', {
+            detail: {
+              status: err.response?.status,
+              message: err.message || 'Unable to connect to backend server',
+            },
+          })
+        )
+      }
+    }
+
     if (err.response?.status === 401) {
       localStorage.removeItem('jwt_token')
       localStorage.removeItem('jwt_user')

@@ -241,7 +241,7 @@ public class WebController {
             existing.setStatus(issue.getStatus());
             existing.setPriority(issue.getPriority());
             existing.setAssignedTo(issue.getAssignedTo());
-            issuesService.updateIssue(existing);
+            issuesService.updateIssue(existing, null);
             redirectAttributes.addFlashAttribute("success", "Issue updated successfully.");
         } catch (Exception e) {
             log.error("Failed to update issue: {}", e.getMessage());

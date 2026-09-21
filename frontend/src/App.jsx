@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './queryClient'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { ServerStatusProvider } from './context/ServerStatusContext'
 import ErrorBoundary from './components/ErrorBoundary'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -11,11 +12,24 @@ import Layout from './components/Layout'
 import ProjectsPage from './pages/ProjectsPage'
 import IssueDetailPage from './pages/IssueDetailPage'
 import ProfilePage from './pages/ProfilePage'
+import NotFoundPage from './pages/NotFoundPage'
 
 function PrivateRoute({ children }) {
   const { user } = useAuth()
   if (!user) return <Navigate to="/login" replace />
   return children || null
+}
+
+function AppRouteFallback() {
+  const { user } = useAuth()
+  if (user) {
+    return (
+      <Layout>
+        <NotFoundPage />
+      </Layout>
+    )
+  }
+  return <NotFoundPage />
 }
 
 function AppRoutes() {
@@ -35,8 +49,8 @@ function AppRoutes() {
         <Route path="/profile" element={<ProfilePage />} />
       </Route>
 
-      {/* Fallback */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* 404 Not Found fallback */}
+      <Route path="*" element={<AppRouteFallback />} />
     </Routes>
   )
 }
@@ -46,9 +60,11 @@ export default function App() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
+          <ServerStatusProvider>
+            <BrowserRouter>
+              <AppRoutes />
+            </BrowserRouter>
+          </ServerStatusProvider>
         </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>
